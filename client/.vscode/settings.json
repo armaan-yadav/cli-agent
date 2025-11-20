@@ -1,0 +1,15 @@
+{
+  // Sets the editor to use spaces and a width of 2 for indentation
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  
+  // Controls import style for TypeScript/JavaScript to omit extensions
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  
+  // Explicitly set the default formatter for TS files
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}

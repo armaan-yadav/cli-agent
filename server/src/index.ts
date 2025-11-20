@@ -1,19 +1,29 @@
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import cors from "cors";
+import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
-import { auth } from "./lib/auth.ts";
+import { auth } from "./lib/auth.js";
+import morgan from "morgan";
+
+//config dotenv file
+dotenv.config();
 
 const app = express();
 
 //cors setup
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+//morgan for logging
+app.use(morgan("dev"));
+
+//better-auth handler
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 //middlewares
@@ -27,8 +37,8 @@ app.get("/api/me", async (req, res) => {
   return res.json(session);
 });
 
-app.get("/health", (req: Request, res: Response) => {
-  res.send("ok");
+app.get("/", (req: Request, res: Response) => {
+  res.json("ok");
 });
 
 export default app;
