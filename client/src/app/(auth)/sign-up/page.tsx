@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/authClient";
 import { GalleryVerticalEnd } from "lucide-react";
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -68,11 +69,11 @@ const SignUp = () => {
                   <div className="flex size-8 items-center justify-center rounded-md">
                     <GalleryVerticalEnd className="size-6" />
                   </div>
-                  <span className="sr-only">Acme Inc.</span>
+                  <span className="sr-only">Arka CLI</span>
                 </a>
-                <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+                <h1 className="text-xl font-bold">Welcome to Arka CLI</h1>
                 <FieldDescription>
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Already have an account? <Link href="/sign-in">Sign in</Link>
                 </FieldDescription>
               </div>
               <Field>
@@ -109,7 +110,7 @@ const SignUp = () => {
                 />
               </Field>
               <Field>
-                <Button type="submit">signup</Button>
+                <Button type="submit">Signup</Button>
               </Field>
               <FieldSeparator>Or</FieldSeparator>
               <Field className="">
@@ -129,10 +130,6 @@ const SignUp = () => {
               </Field>
             </FieldGroup>
           </form>
-          <FieldDescription className="px-6 text-center">
-            By clicking continue, you agree to our{" "}
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-          </FieldDescription>
         </div>
       </div>
     </div>

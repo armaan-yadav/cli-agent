@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -8,15 +9,21 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/authClient";
 import { GalleryVerticalEnd } from "lucide-react";
-import { FormEvent, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>("example@abc.com");
   const [password, setPassword] = useState<string>("12345678");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { data, error, isPending } = authClient.useSession();
+  const router = useRouter();
 
   const login = async (e: FormEvent) => {
     try {
@@ -38,6 +45,7 @@ const SignIn = () => {
       setIsLoading(false);
     }
   };
+
   const loginWithGoogle = async () => {
     try {
       const data = await authClient.signIn.social({
@@ -51,6 +59,16 @@ const SignIn = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!isPending && data?.user && data?.session) {
+      router.push("/");
+    }
+  }, [data, isPending, router]);
+
+  if (isPending) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -66,11 +84,12 @@ const SignIn = () => {
                   <div className="flex size-8 items-center justify-center rounded-md">
                     <GalleryVerticalEnd className="size-6" />
                   </div>
-                  <span className="sr-only">Acme Inc.</span>
+                  <span className="sr-only">Arka CLI</span>
                 </a>
-                <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+                <h1 className="text-xl font-bold">Welcome to Arka CLI</h1>
                 <FieldDescription>
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account?{" "}
+                  <Link href="/sign-up">Sign up</Link>
                 </FieldDescription>
               </div>
               <Field>
@@ -96,7 +115,9 @@ const SignIn = () => {
                 />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit">
+                  {isLoading ? <Spinner /> : "Login"}
+                </Button>
               </Field>
               <FieldSeparator>Or</FieldSeparator>
               <Field className="">
@@ -116,10 +137,6 @@ const SignIn = () => {
               </Field>
             </FieldGroup>
           </form>
-          <FieldDescription className="px-6 text-center">
-            By clicking continue, you agree to our{" "}
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-          </FieldDescription>
         </div>
       </div>
     </div>
