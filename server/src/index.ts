@@ -37,6 +37,12 @@ app.get("/api/me", async (req, res) => {
   return res.json(session);
 });
 
+//redirect to client app
+app.get("/device", async (req: Request, res: Response) => {
+  const { user_code } = req.query;
+  res.redirect(`http://localhost:3000/device?user_code=${user_code}`);
+});
+
 app.get("/", (req: Request, res: Response) => {
   res.json("ok");
 });

@@ -9,7 +9,6 @@ import { login } from "./auth/login.js";
 dotenv.config();
 
 async function main() {
-
   //display  a banner
   console.log(
     chalk.cyan(

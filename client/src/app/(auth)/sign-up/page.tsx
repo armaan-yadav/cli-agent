@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/authClient";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const SignUp = () => {
@@ -19,6 +20,11 @@ const SignUp = () => {
   const [password, setPassword] = useState<string>("12345678");
   const [name, setName] = useState<string>("johnwa yadav");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  const { data, isPending } = authClient.useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const signup = async (e: FormEvent) => {
     try {
@@ -26,17 +32,23 @@ const SignUp = () => {
       setIsLoading(true);
       //todo : add validation
 
-      const data = await authClient.signUp.email({
+      const result = await authClient.signUp.email({
         email,
         password,
         callbackURL: process.env.NEXT_PUBLIC_CLIENT_URL,
         name,
       });
 
-      console.log(data);
+      console.log(result);
+      
+      // Redirect after successful signup
+      if (result.data) {
+        router.push(redirect || "/");
+      }
     } catch (error) {
-      console.log("Something went wrong while signing in.");
+      console.log("Something went wrong while signing up.");
       console.log(error);
+      toast.error("Failed to sign up. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -45,15 +57,21 @@ const SignUp = () => {
     try {
       const data = await authClient.signIn.social({
         provider: "google",
-        callbackURL: process.env.NEXT_PUBLIC_CLIENT_URL,
+        callbackURL: redirect || process.env.NEXT_PUBLIC_CLIENT_URL,
       });
       console.log(data);
     } catch (error) {
       console.log("Something went wrong while logging with google");
-      toast("Something went wrong while logging with google");
+      toast.error("Something went wrong while logging with google");
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!isPending && data?.user && data?.session) {
+      router.push(redirect || "/");
+    }
+  }, [data, isPending, router, redirect]);
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -73,7 +91,7 @@ const SignUp = () => {
                 </a>
                 <h1 className="text-xl font-bold">Welcome to Arka CLI</h1>
                 <FieldDescription>
-                  Already have an account? <Link href="/sign-in">Sign in</Link>
+                  Already have an account? <Link href={`/sign-in${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ""}`}>Sign in</Link>
                 </FieldDescription>
               </div>
               <Field>

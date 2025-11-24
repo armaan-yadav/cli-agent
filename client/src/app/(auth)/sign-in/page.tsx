@@ -13,7 +13,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/authClient";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +24,9 @@ const SignIn = () => {
 
   const { data, error, isPending } = authClient.useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+  console.log(redirect);
 
   const login = async (e: FormEvent) => {
     try {
@@ -31,16 +34,22 @@ const SignIn = () => {
       setIsLoading(true);
       //todo : add validation
 
-      const data = await authClient.signIn.email({
+      const result = await authClient.signIn.email({
         email,
         password,
-        callbackURL: process.env.NEXT_PUBLIC_CLIENT_URL,
       });
 
-      console.log(data);
+      console.log(result);
+
+      // Redirect after successful login
+      if (result.data) {
+        console.log("redirecting to", redirect);
+        router.push(redirect || "/");
+      }
     } catch (error) {
       console.log("Something went wrong while signing in.");
       console.log(error);
+      toast.error("Failed to sign in. Please check your credentials.");
     } finally {
       setIsLoading(false);
     }
@@ -50,21 +59,22 @@ const SignIn = () => {
     try {
       const data = await authClient.signIn.social({
         provider: "google",
-        callbackURL: process.env.NEXT_PUBLIC_CLIENT_URL,
+        callbackURL: redirect || process.env.NEXT_PUBLIC_CLIENT_URL,
       });
       console.log(data);
     } catch (error) {
       console.log("Something went wrong while logging with google");
-      toast("Something went wrong while logging with google");
+      toast.error("Something went wrong while logging with google");
       console.log(error);
     }
   };
 
   useEffect(() => {
     if (!isPending && data?.user && data?.session) {
-      router.push("/");
+      console.log(redirect);
+      router.push(redirect || "/");
     }
-  }, [data, isPending, router]);
+  }, [data, isPending, router, redirect]);
 
   if (isPending) {
     return <Loading />;
@@ -89,7 +99,15 @@ const SignIn = () => {
                 <h1 className="text-xl font-bold">Welcome to Arka CLI</h1>
                 <FieldDescription>
                   Don&apos;t have an account?{" "}
-                  <Link href="/sign-up">Sign up</Link>
+                  <Link
+                    href={`/sign-up${
+                      redirect
+                        ? `?redirect=${encodeURIComponent(redirect)}`
+                        : ""
+                    }`}
+                  >
+                    Sign up
+                  </Link>
                 </FieldDescription>
               </div>
               <Field>
