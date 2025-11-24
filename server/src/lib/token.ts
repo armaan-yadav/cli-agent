@@ -1,6 +1,6 @@
-import fs from "fs/promises";
 import chalk from "chalk";
-import { CONFIG_DIR, TOKEN_FILE } from "../cli/auth/login.js";
+import fs from "fs/promises";
+import { CONFIG_DIR, TOKEN_FILE } from "../cli/auth/config.js";
 
 export async function getStoredToken() {
   try {

@@ -4,6 +4,8 @@ import { Command } from "commander";
 import dotenv from "dotenv";
 import figlet from "figlet";
 import { login } from "./auth/login.js";
+import { logout } from "./auth/logout.js";
+import { whoami } from "./auth/whoami.js";
 
 //configure dotenv
 dotenv.config();
@@ -31,7 +33,9 @@ async function main() {
     .action(() => {
       program.help();
     })
-    .addCommand(login);
+    .addCommand(login)
+    .addCommand(logout)
+    .addCommand(whoami)
 
   //parsing
   program.parse();

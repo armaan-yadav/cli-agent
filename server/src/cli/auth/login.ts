@@ -4,23 +4,16 @@ import { createAuthClient } from "better-auth/client";
 import { deviceAuthorizationClient } from "better-auth/client/plugins";
 import chalk from "chalk";
 import { Command } from "commander";
-import dotenv from "dotenv";
 import open from "open";
-import os from "os";
-import path from "path";
 import yoctoSpinner from "yocto-spinner";
 import * as z from "zod";
 import { getStoredToken, isTokenExpired, storeToken } from "../../lib/token.js";
+import { CLIENT_ID, TOKEN_FILE, URL } from "./config.js";
 
-dotenv.config();
-const URL = `http://localhost:9000`;
-const CLIENT_ID =
-  process.env.GOOGLE_CLIENT_ID ||
-  "351141722258-52rbna7vl0pobq5m18kf5hel6ia55f2q.apps.googleusercontent.com";
-export const CONFIG_DIR = path.join(os.homedir(), ".better-auth");
-export const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");
 
-export async function loginAction(opts: any) {
+
+
+async function loginAction(opts: any) {
   //setup schema for the options
   const optionsSchema = z.object({
     serverUrl: z.string().optional(),
@@ -228,8 +221,7 @@ async function pollForToken(
   });
 }
 
-//commander setup
-
+//create a mew commander command
 export const login = new Command("login")
   .description("Login to Arka CLI")
   .option("--server-url <url>", "The Arka server URL", URL)
