@@ -4,11 +4,12 @@ import { createAuthClient } from "better-auth/client";
 import { deviceAuthorizationClient } from "better-auth/client/plugins";
 import chalk from "chalk";
 import { Command } from "commander";
+import type { OAuthTokenResponse } from "../../../interfaces/index.js";
 import open from "open";
 import yoctoSpinner from "yocto-spinner";
 import * as z from "zod";
-import { getStoredToken, isTokenExpired, storeToken } from "../../lib/token.js";
-import { CLIENT_ID, TOKEN_FILE, URL } from "./config.js";
+import { getStoredToken, isTokenExpired, storeToken } from "../../../lib/token.js";
+import { CLIENT_ID, TOKEN_FILE, URL } from "./auth.config.js";
 
 
 
@@ -141,13 +142,12 @@ async function loginAction(opts: any) {
   }
 }
 
-//todo: research about this in deep!
 async function pollForToken(
   authClient: any,
   deviceCode: string,
   clientId: string,
   initialIntervalValue: number
-) {
+): Promise<OAuthTokenResponse | null> {
   let pollingInterval = initialIntervalValue;
   const spinner = yoctoSpinner({ text: "", color: "cyan" });
   let dots = 0;

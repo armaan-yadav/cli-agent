@@ -1,7 +1,7 @@
 import { cancel, confirm, isCancel, outro } from "@clack/prompts";
 import chalk from "chalk";
 import { Command } from "commander";
-import { clearStoredToken, getStoredToken } from "../../lib/token.js";
+import { clearStoredToken, getStoredToken } from "../../../lib/token.js";
 
 async function logoutAction(opts:any
 

@@ -3,7 +3,7 @@ import path from "path";
 import dotenv from "dotenv";
 
 
-dotenv.config();
+dotenv.config({quiet: true});
 // cli auth config
 export const CONFIG_DIR = path.join(os.homedir(), ".arka-cli");
 export const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");

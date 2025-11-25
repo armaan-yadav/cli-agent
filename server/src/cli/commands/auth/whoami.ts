@@ -1,8 +1,8 @@
 import chalk from "chalk";
 import { Command } from "commander";
-import prisma from "../../lib/db.js";
-import { requireAuth } from "../../lib/token.js";
-import { URL } from "./config.js";
+import prisma from "../../../lib/db.js";
+import { requireAuth } from "../../../lib/token.js";
+import { URL } from "./auth.config.js";
 
 async function whoamiAction(opts:any) {
     try {
@@ -31,7 +31,7 @@ async function whoamiAction(opts:any) {
             }
         })
 
-        console.log(chalk.greenBright(`\n Name: ${user?.name} \n Email: ${user?.email} \n ID: ${user?.id} \n }`))
+        console.log(chalk.greenBright(`\n Name: ${user?.name} \n Email: ${user?.email} \n ID: ${user?.id} \n`))
 
     } catch (error) {
         console.log(chalk.red(`Something went wrong in whoamiAction: ${error}`))

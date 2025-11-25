@@ -1,12 +1,10 @@
 import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import cors from "cors";
-import dotenv from "dotenv";
 import express, { type Request, type Response } from "express";
-import { auth } from "./lib/auth.js";
 import morgan from "morgan";
+import { auth } from "./lib/auth.js";
 
-//config dotenv file
-dotenv.config();
+
 
 const app = express();
 

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import app from "./index.js";
 
-dotenv.config();
+dotenv.config({quiet: true});
 
 const port = process.env.PORT || 9000;
 
