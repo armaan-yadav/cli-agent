@@ -8,12 +8,10 @@ import { getStoredToken } from "../../../lib/token.js";
 const wakeUpAction = async ()=>{
     try {
         const token = await getStoredToken();
-
         if(!token){
             console.log("No stored token found. Please log in first.");
             return;
         }
-
         if(!token.access_token){
             console.log("Stored token is invalid. Please log in again.");
             return;
@@ -24,18 +22,23 @@ const wakeUpAction = async ()=>{
 
         //get user data
         const user = await prisma.user.findFirst
-        ({where : {
-            sessions : {
-                some : {
-                    token  : token.access_token
+        (
+            {
+                where : {
+                sessions : {
+                    some : {
+                        token  : token.access_token
+                    }
+                }
+         },
+                select :{
+                    id : true,
+                    name : true,
+                    email : true,
+                    image : true
                 }
             }
-        },select :{
-            id : true,
-            name : true,
-            email : true,
-            image : true
-        }})
+        )
         
         spinner.stop();
 
