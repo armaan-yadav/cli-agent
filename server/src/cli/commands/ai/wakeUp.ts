@@ -2,6 +2,7 @@ import { select } from "@clack/prompts";
 import chalk from "chalk";
 import { Command } from "commander";
 import yoctoSpinner from "yocto-spinner";
+import { startMessaging } from "../../chat/chatWithAi.js";
 import prisma from "../../../lib/db.js";
 import { getStoredToken } from "../../../lib/token.js";
 
@@ -39,7 +40,7 @@ const wakeUpAction = async ()=>{
                 }
             }
         )
-        
+
         spinner.stop();
 
         //if user does not exist
@@ -48,7 +49,7 @@ const wakeUpAction = async ()=>{
             return;
         }
 
-        console.log(chalk.green(`Welcome back, ${user.name}!\n`));
+        console.log(chalk.bgGreen(`Welcome back, ${user.name}!\n`));
 
         const choice = await select({message : "Select an option.",options:[
 
@@ -66,7 +67,7 @@ const wakeUpAction = async ()=>{
 
         switch (choice) {
             case "chat":
-                console.log("Chat is selected");
+                startMessaging({conversationId:null,mode:"chat"});
                 break;
             case "tool":
                 console.log("Tool is selected");
